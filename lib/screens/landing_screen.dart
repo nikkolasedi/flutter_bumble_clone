@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bumble_clone/constants.dart';
+import 'package:flutter_bumble_clone/screens/login_mobile_screen.dart';
 import 'package:flutter_bumble_clone/utils.dart';
 
 class LandingScreen extends StatelessWidget {
@@ -49,7 +50,7 @@ class LandingScreen extends StatelessWidget {
             ),
             SizedBox(height: 12),
             FlatButton(
-              onPressed: () => _onMobileNumberLoginClicked(),
+              onPressed: () => _onMobileNumberLoginClicked(context),
               child: Text(
                 'Use cell phone number',
                 style: TextStyle(fontSize: 18),
@@ -107,7 +108,8 @@ class LandingScreen extends StatelessWidget {
     print('lmao3');
   }
 
-  _onMobileNumberLoginClicked() {
-    print('lmao4');
+  _onMobileNumberLoginClicked(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => LoginMobileScreen()));
   }
 }
