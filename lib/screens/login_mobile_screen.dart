@@ -8,15 +8,26 @@ class LoginMobileScreen extends StatefulWidget {
 
 class _LoginMobileScreenState extends State<LoginMobileScreen> {
   TextEditingController _mobileTextController = TextEditingController();
+  FocusNode _mobileFocusNode = FocusNode();
+
+  bool _isFieldValid = true;
 
   @override
   void dispose() {
     _mobileTextController.dispose();
+    _mobileFocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    OutlineInputBorder border = OutlineInputBorder(
+      borderSide: BorderSide(
+        color: _isFieldValid ? Colors.grey : Colors.red,
+      ),
+      borderRadius: BorderRadius.all(Radius.circular(30)),
+    );
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -54,27 +65,42 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 24),
-                    child: Text('Cell phone number'),
+                    child: Text(
+                      _isFieldValid
+                          ? 'Cell phone number'
+                          : 'Please check your number',
+                      style: TextStyle(
+                        color: _isFieldValid ? Colors.black : Colors.red,
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(height: 8),
-                TextField(
-                  onChanged: (_) => this.setState(() {}),
-                  autofocus: true,
-                  keyboardType: TextInputType.number,
-                  enableSuggestions: false,
-                  controller: _mobileTextController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30))),
-                    filled: true,
-                    hintStyle: TextStyle(color: Colors.grey),
-                    hintText: '1234567890',
-                    fillColor: Colors.white70,
-                    prefixIcon: SizedBox(
-                      child: Center(
-                        child: Text('+63'),
-                        widthFactor: 0,
+                Theme(
+                  data: ThemeData(),
+                  child: TextField(
+                    onChanged: (_) => this.setState(() {
+                      _isFieldValid = true;
+                    }),
+                    autofocus: true,
+                    keyboardType: TextInputType.number,
+                    enableSuggestions: false,
+                    controller: _mobileTextController,
+                    focusNode: _mobileFocusNode,
+                    decoration: InputDecoration(
+                      focusedBorder: border,
+                      border: border,
+                      enabledBorder: border,
+                      errorBorder: border,
+                      filled: true,
+                      hintStyle: TextStyle(color: Colors.grey),
+                      hintText: '1234567890',
+                      fillColor: Colors.white70,
+                      prefixIcon: SizedBox(
+                        child: Center(
+                          child: Text('+63'),
+                          widthFactor: 0,
+                        ),
                       ),
                     ),
                   ),
@@ -109,6 +135,44 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
   }
 
   _onContinueClicked() {
-    if (_mobileTextController.text.isEmpty) {}
+    const String recognized = '9063517354';
+
+    if (_mobileTextController.text == recognized) {
+      FocusScope.of(context).unfocus();
+      _navigateToLoginPasswordScreen();
+    } else if (_mobileTextController.text.length != recognized.length) {
+      setState(() {
+        _mobileFocusNode.requestFocus();
+        _isFieldValid = false;
+      });
+    } else {
+      FocusScope.of(context).unfocus();
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Phone Number Confirmation'),
+            content: Text(
+                "We'll send a verification code to the following number:\n+63${_mobileTextController.text}"),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('Cancel'),
+              ),
+              FlatButton(
+                onPressed: () => _navigateToVerifyNumberScreen(),
+                child: Text('Confirm'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
+
+  // Navigations
+
+  _navigateToLoginPasswordScreen() {}
+
+  _navigateToVerifyNumberScreen() {}
 }
