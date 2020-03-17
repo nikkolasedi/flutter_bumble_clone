@@ -7,6 +7,14 @@ class LoginMobileScreen extends StatefulWidget {
 }
 
 class _LoginMobileScreenState extends State<LoginMobileScreen> {
+  TextEditingController _mobileTextController = TextEditingController();
+
+  @override
+  void dispose() {
+    _mobileTextController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +59,11 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                 ),
                 SizedBox(height: 8),
                 TextField(
+                  onChanged: (_) => this.setState(() {}),
+                  autofocus: true,
+                  keyboardType: TextInputType.number,
                   enableSuggestions: false,
+                  controller: _mobileTextController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -59,7 +71,6 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                     hintStyle: TextStyle(color: Colors.grey),
                     hintText: '1234567890',
                     fillColor: Colors.white70,
-                    // prefixText: ,
                     prefixIcon: SizedBox(
                       child: Center(
                         child: Text('+63'),
@@ -70,7 +81,9 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                 ),
                 SizedBox(height: 24),
                 FlatButton(
-                  color: Constants.bumbleYellow,
+                  color: _mobileTextController.text.isEmpty
+                      ? Constants.bumbleBanana
+                      : Constants.bumbleYellow,
                   onPressed: () => _onContinueClicked(),
                   child: SizedBox(
                     height: 50,
@@ -95,5 +108,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
     );
   }
 
-  _onContinueClicked() {}
+  _onContinueClicked() {
+    if (_mobileTextController.text.isEmpty) {}
+  }
 }
