@@ -31,7 +31,7 @@ class LandingScreen extends StatelessWidget {
               padding: const EdgeInsets.only(left: 24, right: 24),
               child: FlatButton(
                 color: Colors.white,
-                onPressed: () => _onFacebookLoginClicked(),
+                onPressed: () => _facebookLoginClicked(),
                 child: SizedBox(
                   height: 50,
                   child: Container(
@@ -50,7 +50,7 @@ class LandingScreen extends StatelessWidget {
             ),
             SizedBox(height: 12),
             FlatButton(
-              onPressed: () => _onMobileNumberLoginClicked(context),
+              onPressed: () => _mobileNumberLoginClicked(context),
               child: Text(
                 'Use cell phone number',
                 style: TextStyle(fontSize: 18),
@@ -74,7 +74,7 @@ class LandingScreen extends StatelessWidget {
                     ),
                   ),
                   padding: EdgeInsets.only(left: 0, right: 0),
-                  onPressed: () => _onTermsClicked(),
+                  onPressed: () => _termsClicked(),
                 ),
                 SizedBox(width: 12),
                 FlatButton(
@@ -86,7 +86,7 @@ class LandingScreen extends StatelessWidget {
                     ),
                   ),
                   padding: EdgeInsets.only(left: 0, right: 0),
-                  onPressed: () => _onPrivacyPolicyClicked(),
+                  onPressed: () => _privacyPolicyClicked(),
                 ),
               ],
             ),
@@ -96,19 +96,19 @@ class LandingScreen extends StatelessWidget {
     );
   }
 
-  _onTermsClicked() {
+  _termsClicked() {
     Utils.openUrl(Constants.termsAndConditionsUrl);
   }
 
-  _onPrivacyPolicyClicked() {
+  _privacyPolicyClicked() {
     Utils.openUrl(Constants.privacyPolicyUrl);
   }
 
-  _onFacebookLoginClicked() {
+  _facebookLoginClicked() {
     print('lmao3');
   }
 
-  _onMobileNumberLoginClicked(BuildContext context) {
+  _mobileNumberLoginClicked(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (_) => LoginMobileScreen(), fullscreenDialog: true));
   }

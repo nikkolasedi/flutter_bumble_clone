@@ -110,7 +110,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                   color: _mobileTextController.text.isEmpty
                       ? Constants.bumbleBanana
                       : Constants.bumbleYellow,
-                  onPressed: () => _onContinueClicked(),
+                  onPressed: () => _continueClicked(),
                   child: SizedBox(
                     height: 50,
                     child: Container(
@@ -134,7 +134,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
     );
   }
 
-  _onContinueClicked() {
+  _continueClicked() {
     const String recognized = '9063517354';
 
     if (_mobileTextController.text == recognized) {
