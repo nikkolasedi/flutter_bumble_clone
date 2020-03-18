@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bumble_clone/constants.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class LoginMobileScreen extends StatefulWidget {
   @override
@@ -147,10 +148,10 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
       });
     } else {
       FocusScope.of(context).unfocus();
-      showDialog(
+      showPlatformDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
+          return PlatformAlertDialog(
             title: Text('Phone Number Confirmation'),
             content: Text(
                 "We'll send a verification code to the following number:\n+63${_mobileTextController.text}"),
