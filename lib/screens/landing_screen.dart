@@ -109,7 +109,7 @@ class LandingScreen extends StatelessWidget {
   }
 
   _onMobileNumberLoginClicked(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => LoginMobileScreen()));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (_) => LoginMobileScreen(), fullscreenDialog: true));
   }
 }
