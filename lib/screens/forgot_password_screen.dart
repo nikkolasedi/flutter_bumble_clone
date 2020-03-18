@@ -3,16 +3,21 @@ import 'package:flutter_bumble_clone/constants.dart';
 import 'package:flutter_bumble_clone/screens/login_password_screen.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-class LoginMobileScreen extends StatefulWidget {
+class ForgotPasswordScreen extends StatefulWidget {
+  final String mobileNumber;
+
+  ForgotPasswordScreen({this.mobileNumber});
+
   @override
-  _LoginMobileScreenState createState() => _LoginMobileScreenState();
+  _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
 }
 
-class _LoginMobileScreenState extends State<LoginMobileScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   TextEditingController _mobileTextController = TextEditingController();
   FocusNode _mobileFocusNode = FocusNode();
 
   bool _isFieldValid = true;
+  int _remainingSeconds = 18;
 
   @override
   void dispose() {
@@ -49,7 +54,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
             child: Column(
               children: <Widget>[
                 Text(
-                  "What's your number?",
+                  "Verify your number?",
                   style: TextStyle(
                     fontSize: 24,
                     color: Constants.bumbleYellow,
@@ -58,26 +63,11 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                 ),
                 SizedBox(height: 12),
                 Text(
-                  "Whether you're creating an account or\nsigning back in, let's start with your number",
+                  "Enter the 4 digit code we just sent you to verify your account",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(height: 24),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 24),
-                    child: Text(
-                      _isFieldValid
-                          ? 'Cell phone number'
-                          : 'Please check your number',
-                      style: TextStyle(
-                        color: _isFieldValid ? Colors.black : Colors.red,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 8),
                 Theme(
                   data: ThemeData(),
                   child: TextField(
@@ -112,7 +102,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                   color: _mobileTextController.text.isEmpty
                       ? Constants.bumbleBanana
                       : Constants.bumbleYellow,
-                  onPressed: () => _continueClicked(),
+                  onPressed: () => _verifyClicked(),
                   child: SizedBox(
                     height: 50,
                     child: Container(
@@ -128,6 +118,14 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                   ),
                   textColor: Colors.white,
                 ),
+                SizedBox(height: 24),
+                Text(
+                    'Text to +63 ${widget.mobileNumber} should arrive within $_remainingSeconds sec.'),
+                FlatButton(
+                  onPressed: () => _navigateToLoginMobileScreen(),
+                  child: Text('Change number',
+                      style: TextStyle(decoration: TextDecoration.underline)),
+                ),
               ],
             ),
           ),
@@ -136,50 +134,12 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
     );
   }
 
-  _continueClicked() {
-    const String recognized = '9063517354';
-
-    if (_mobileTextController.text == recognized) {
-      FocusScope.of(context).unfocus();
-      _navigateToLoginPasswordScreen();
-    } else if (_mobileTextController.text.length != recognized.length) {
-      setState(() {
-        _mobileFocusNode.requestFocus();
-        _isFieldValid = false;
-      });
-    } else {
-      FocusScope.of(context).unfocus();
-      showPlatformDialog(
-        context: context,
-        builder: (context) {
-          return PlatformAlertDialog(
-            title: Text('Phone Number Confirmation'),
-            content: Text(
-                "We'll send a verification code to the following number:\n+63${_mobileTextController.text}"),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('Cancel'),
-              ),
-              FlatButton(
-                onPressed: () => _navigateToVerifyNumberScreen(),
-                child: Text('Confirm'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  _verifyClicked() {}
 
   // Navigations
 
-  _navigateToLoginPasswordScreen() {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => LoginPasswordScreen(
-              mobileNumber: _mobileTextController.text,
-            )));
+  _navigateToLoginMobileScreen() {
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
-
-  _navigateToVerifyNumberScreen() {}
 }

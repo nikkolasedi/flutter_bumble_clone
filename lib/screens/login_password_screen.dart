@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bumble_clone/constants.dart';
-import 'package:flutter_bumble_clone/screens/login_password_screen.dart';
+import 'package:flutter_bumble_clone/screens/forgot_password_screen.dart';
+import 'package:flutter_bumble_clone/screens/main_screen.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-class LoginMobileScreen extends StatefulWidget {
+class LoginPasswordScreen extends StatefulWidget {
+  final String mobileNumber;
+
+  LoginPasswordScreen({this.mobileNumber});
+
   @override
-  _LoginMobileScreenState createState() => _LoginMobileScreenState();
+  _LoginPasswordScreenState createState() => _LoginPasswordScreenState();
 }
 
-class _LoginMobileScreenState extends State<LoginMobileScreen> {
-  TextEditingController _mobileTextController = TextEditingController();
-  FocusNode _mobileFocusNode = FocusNode();
+class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
+  TextEditingController _passwordTextController = TextEditingController();
+  FocusNode _passwordFocusNode = FocusNode();
 
   bool _isFieldValid = true;
 
   @override
   void dispose() {
-    _mobileTextController.dispose();
-    _mobileFocusNode.dispose();
+    _passwordTextController.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
@@ -36,7 +41,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
         bottomOpacity: 0,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.close),
+          icon: Icon(Icons.arrow_back_ios),
           color: Colors.grey,
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -49,7 +54,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
             child: Column(
               children: <Widget>[
                 Text(
-                  "What's your number?",
+                  "Log in",
                   style: TextStyle(
                     fontSize: 24,
                     color: Constants.bumbleYellow,
@@ -58,9 +63,9 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                 ),
                 SizedBox(height: 12),
                 Text(
-                  "Whether you're creating an account or\nsigning back in, let's start with your number",
+                  "Welcome back to Bumble! Fill out your\npassword and you'll be Bumbling in no time",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 24),
                 Align(
@@ -68,9 +73,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 24),
                     child: Text(
-                      _isFieldValid
-                          ? 'Cell phone number'
-                          : 'Please check your number',
+                      _isFieldValid ? 'Password' : 'Wrong login or password',
                       style: TextStyle(
                         color: _isFieldValid ? Colors.black : Colors.red,
                       ),
@@ -85,10 +88,10 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                       _isFieldValid = true;
                     }),
                     autofocus: true,
-                    keyboardType: TextInputType.number,
                     enableSuggestions: false,
-                    controller: _mobileTextController,
-                    focusNode: _mobileFocusNode,
+                    controller: _passwordTextController,
+                    focusNode: _passwordFocusNode,
+                    obscureText: true,
                     decoration: InputDecoration(
                       focusedBorder: border,
                       border: border,
@@ -96,29 +99,22 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                       errorBorder: border,
                       filled: true,
                       hintStyle: TextStyle(color: Colors.grey),
-                      hintText: '1234567890',
                       fillColor: Colors.white70,
-                      prefixIcon: SizedBox(
-                        child: Center(
-                          child: Text('+63'),
-                          widthFactor: 0,
-                        ),
-                      ),
                     ),
                   ),
                 ),
                 SizedBox(height: 24),
                 FlatButton(
-                  color: _mobileTextController.text.isEmpty
+                  color: _passwordTextController.text.isEmpty
                       ? Constants.bumbleBanana
                       : Constants.bumbleYellow,
-                  onPressed: () => _continueClicked(),
+                  onPressed: () => _logInClicked(),
                   child: SizedBox(
                     height: 50,
                     child: Container(
                       child: Center(
                           child: Text(
-                        'Continue',
+                        'Log In',
                         style: TextStyle(fontSize: 18),
                       )),
                     ),
@@ -128,6 +124,17 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                   ),
                   textColor: Colors.white,
                 ),
+                SizedBox(height: 24),
+                FlatButton(
+                  onPressed: () => _forgotPasswordClicked(),
+                  child: Text(
+                    "I've forgotten my password",
+                    style: TextStyle(
+                      color: Constants.bumbleYellow,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -136,50 +143,56 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
     );
   }
 
-  _continueClicked() {
-    const String recognized = '9063517354';
+  _logInClicked() {
+    const String recognized = 'password';
 
-    if (_mobileTextController.text == recognized) {
+    if (_passwordTextController.text == recognized) {
       FocusScope.of(context).unfocus();
-      _navigateToLoginPasswordScreen();
-    } else if (_mobileTextController.text.length != recognized.length) {
+      _navigateMainScreen();
+    } else {
       setState(() {
-        _mobileFocusNode.requestFocus();
+        _passwordFocusNode.requestFocus();
         _isFieldValid = false;
       });
-    } else {
-      FocusScope.of(context).unfocus();
-      showPlatformDialog(
-        context: context,
-        builder: (context) {
-          return PlatformAlertDialog(
-            title: Text('Phone Number Confirmation'),
-            content: Text(
-                "We'll send a verification code to the following number:\n+63${_mobileTextController.text}"),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('Cancel'),
-              ),
-              FlatButton(
-                onPressed: () => _navigateToVerifyNumberScreen(),
-                child: Text('Confirm'),
-              ),
-            ],
-          );
-        },
-      );
     }
   }
 
-  // Navigations
-
-  _navigateToLoginPasswordScreen() {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => LoginPasswordScreen(
-              mobileNumber: _mobileTextController.text,
-            )));
+  _forgotPasswordClicked() {
+    showPlatformDialog(
+      context: context,
+      builder: (context) {
+        return PlatformAlertDialog(
+          title: Text('Need to reset your password?'),
+          content: Text(
+              "Don't worry, we can use your cell phone number to get you back to Bumbling in no Time."),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel'),
+            ),
+            FlatButton(
+              onPressed: () {
+                print(widget.mobileNumber);
+                final String mobileNumber = widget.mobileNumber;
+                print(mobileNumber);
+                Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ForgotPasswordScreen(
+                          mobileNumber: mobileNumber,
+                        )));
+              },
+              child: Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
-  _navigateToVerifyNumberScreen() {}
+  _navigateMainScreen() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => MainScreen()),
+      (route) => route.isFirst,
+    );
+  }
 }
