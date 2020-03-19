@@ -164,7 +164,9 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
         return PlatformAlertDialog(
           title: Text('Need to reset your password?'),
           content: Text(
-              "Don't worry, we can use your cell phone number to get you back to Bumbling in no Time."),
+            "Don't worry, we can use your cell phone number to get you back to Bumbling in no Time.",
+            textAlign: TextAlign.center,
+          ),
           actions: <Widget>[
             FlatButton(
               onPressed: () => Navigator.of(context).pop(),

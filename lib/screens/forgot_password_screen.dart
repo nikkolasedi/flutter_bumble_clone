@@ -1,7 +1,8 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bumble_clone/constants.dart';
-import 'package:flutter_bumble_clone/screens/login_password_screen.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   final String mobileNumber;
@@ -15,15 +16,23 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   TextEditingController _mobileTextController = TextEditingController();
   FocusNode _mobileFocusNode = FocusNode();
+  Timer _timer;
 
   bool _isFieldValid = true;
-  int _remainingSeconds = 18;
+  int _remainingSeconds = 30;
 
   @override
   void dispose() {
     _mobileTextController.dispose();
     _mobileFocusNode.dispose();
+    _timer.cancel();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _startCountdownTimer();
   }
 
   @override
@@ -79,6 +88,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     enableSuggestions: false,
                     controller: _mobileTextController,
                     focusNode: _mobileFocusNode,
+                    textAlign: TextAlign.center,
                     decoration: InputDecoration(
                       focusedBorder: border,
                       border: border,
@@ -86,14 +96,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       errorBorder: border,
                       filled: true,
                       hintStyle: TextStyle(color: Colors.grey),
-                      hintText: '1234567890',
+                      hintText: '1 2 3 4',
                       fillColor: Colors.white70,
-                      prefixIcon: SizedBox(
-                        child: Center(
-                          child: Text('+63'),
-                          widthFactor: 0,
-                        ),
-                      ),
                     ),
                   ),
                 ),
@@ -119,12 +123,31 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   textColor: Colors.white,
                 ),
                 SizedBox(height: 24),
-                Text(
-                    'Text to +63 ${widget.mobileNumber} should arrive within $_remainingSeconds sec.'),
+                _remainingSeconds <= 0
+                    ? FlatButton(
+                        onPressed: () => _smsNotRecievedClicked(),
+                        child: Text(
+                          "I didn't get the text",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Constants.bumbleYellow,
+                          ),
+                        ),
+                      )
+                    : Text(
+                        'Text to +63 ${widget.mobileNumber} should arrive within $_remainingSeconds sec.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 12),
+                      ),
                 FlatButton(
                   onPressed: () => _navigateToLoginMobileScreen(),
-                  child: Text('Change number',
-                      style: TextStyle(decoration: TextDecoration.underline)),
+                  child: Text(
+                    'Change number',
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -134,7 +157,57 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
+  _startCountdownTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_remainingSeconds > 0) {
+        setState(() {
+          _remainingSeconds -= 1;
+        });
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
   _verifyClicked() {}
+
+  _smsNotRecievedClicked() {
+    showDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: Text("Didn't get the text?"),
+        content: Text(
+            "\n${widget.mobileNumber}\n\nWe sent the text to this number. If it\n isn't right you can change it now, or\n choose to recieve a phone call instead."),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              print('not supported hahaha');
+              Navigator.of(context).pop();
+            },
+            child: Text('Use a phone call instead'),
+          ),
+          FlatButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              setState(() {
+                _remainingSeconds = 30;
+              });
+              _startCountdownTimer();
+            },
+            child: Text('Send text again'),
+          ),
+          FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _navigateToLoginMobileScreen();
+              },
+              child: Text(
+                'Change number',
+              ))
+        ],
+      ),
+    );
+  }
 
   // Navigations
 
