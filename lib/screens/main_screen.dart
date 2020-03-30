@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bumble_clone/providers/main_screen_view_provider.dart';
+import 'package:provider/provider.dart';
 
-class MainScreen extends StatefulWidget {
-  @override
-  _MainScreenState createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
+class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<MainScreenViewProvider>(context);
+
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.close),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+      body: provider.body,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: provider.currentIndex,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            title: Text(''),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text(''),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat_bubble),
+            title: Text(''),
+          ),
+        ],
+        onTap: (currentIndex) {
+          provider.currentIndex = currentIndex;
+        },
       ),
-      body: Container(),
     );
   }
 }

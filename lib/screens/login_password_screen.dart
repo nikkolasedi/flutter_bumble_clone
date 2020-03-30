@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bumble_clone/constants.dart';
+import 'package:flutter_bumble_clone/providers/main_screen_view_provider.dart';
 import 'package:flutter_bumble_clone/screens/forgot_password_screen.dart';
 import 'package:flutter_bumble_clone/screens/main_screen.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:provider/provider.dart';
 
 class LoginPasswordScreen extends StatefulWidget {
   final String mobileNumber;
@@ -193,7 +195,12 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
 
   _navigateMainScreen() {
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => MainScreen()),
+      MaterialPageRoute(
+        builder: (context) => ChangeNotifierProvider<MainScreenViewProvider>(
+          child: MainScreen(),
+          create: (_) => MainScreenViewProvider(),
+        ),
+      ),
       (route) => route.isFirst,
     );
   }

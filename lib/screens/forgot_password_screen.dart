@@ -95,7 +95,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       enabledBorder: border,
                       errorBorder: border,
                       filled: true,
-                      hintStyle: TextStyle(color: Colors.grey),
+                        hintStyle: TextStyle(color: Colors.grey),
                       hintText: '1 2 3 4',
                       fillColor: Colors.white70,
                     ),
