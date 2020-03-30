@@ -6,6 +6,9 @@ class Constants {
   static Color get bumbleBanana => Color(0xffF3EFA1); // #F3EFA1
 
   // Urls
-  static String termsAndConditionsUrl = 'https://bumble.com/en-us/terms/';
-  static String privacyPolicyUrl = 'https://bumble.com/en-us/privacy/';
+  // static String termsAndConditionsUrl = 'https://bumble.com/en-us/terms/';
+  // static String privacyPolicyUrl = 'https://bumble.com/en-us/privacy/';
+
+  static String termsAndConditionsUrl = 'https://www.google.com/';
+  static String privacyPolicyUrl = 'https://www.google.com/';
 }
