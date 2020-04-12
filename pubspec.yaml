@@ -13,6 +13,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   flutter_platform_widgets: ^0.32.4
   provider: ^4.0.4
+  pin_code_fields: ^2.5.1
 
 dev_dependencies:
   flutter_test:
