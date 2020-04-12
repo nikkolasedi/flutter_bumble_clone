@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bumble_clone/constants.dart';
 import 'package:flutter_bumble_clone/screens/login_password_screen.dart';
+import 'package:flutter_bumble_clone/screens/verify_number_screen.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class LoginMobileScreen extends StatefulWidget {
@@ -157,12 +158,18 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
             content: Text(
                 "We'll send a verification code to the following number:\n+63${_mobileTextController.text}"),
             actions: <Widget>[
-              FlatButton(
+              PlatformDialogAction(
                 onPressed: () => Navigator.of(context).pop(),
-                child: Text('Cancel'),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
-              FlatButton(
-                onPressed: () => _navigateToVerifyNumberScreen(),
+              PlatformDialogAction(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _navigateToVerifyNumberScreen();
+                },
                 child: Text('Confirm'),
               ),
             ],
@@ -181,5 +188,18 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
             )));
   }
 
-  _navigateToVerifyNumberScreen() {}
+  _navigateToVerifyNumberScreen() async {
+    bool shouldReset = await Navigator.of(context).push<bool>(MaterialPageRoute(
+      fullscreenDialog: true,
+      builder: (_) => VerifyNumberScreen(
+        mobileNumber: _mobileTextController.text,
+      ),
+    ));
+
+    if (shouldReset) {
+      setState(() {
+        _mobileTextController.clear();
+      });
+    }
+  }
 }
