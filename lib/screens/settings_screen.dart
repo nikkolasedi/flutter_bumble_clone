@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bumble_clone/constants.dart';
 import 'package:flutter_bumble_clone/widgets/curved_bordered_card.dart';
+import 'package:flutter_bumble_clone/widgets/edged_range_slider.dart';
 import 'package:flutter_bumble_clone/widgets/edged_slider.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -10,7 +11,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  double _ageSliderValue = 18;
+  RangeValues _ageSliderValue = RangeValues(30, 40);
   double _distanceSliderValue = 2;
 
   @override
@@ -52,6 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                 decoration: TextDecoration.none,
                 color: Colors.black,
+                fontSize: 14,
               ),
               child: Padding(
                 padding: const EdgeInsets.only(left: 12, right: 12),
@@ -60,14 +62,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: <Widget>[
                     SizedBox(height: 12),
                     CurvedBorderedCard(child: Text('Snooze Mode')),
-                    Text(
-                        "Turning this on will hide you from all of Bumble's modes for as long as you choose. Your existing matches will remain accesible."),
-                    SizedBox(height: 24),
+
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 6, 12, 24),
+                      child: Text(
+                          'Turning this on will hide you from all of Bumble\'s modes for as long as you choose. Your existing matches will remain accesible.',
+                          style: TextStyle(color: Colors.grey)),
+                    ),
                     title('Filters'),
                     CurvedBorderedCard(
                         child: Text('Set advanced Date filters')),
                     SizedBox(height: 12),
-                    title("I'm interested in..."),
+                    title('I\'m interested in...'),
                     CurvedBorderedCard(child: Text('Men')),
                     SizedBox(height: 6),
                     CurvedBorderedCard(child: Text('Women')),
@@ -75,22 +81,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     CurvedBorderedCard(child: Text('Everyone')),
                     SizedBox(height: 12),
                     title('Age'),
-                    CurvedBorderedCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Between ${_ageSliderValue.toInt()} and 29'),
-                          EdgedSlider(
-                            min: 18,
-                            max: 99,
-                            value: _ageSliderValue,
-                            onChanged: (value) => setState(() {
-                              this._ageSliderValue = value;
-                            }),
+                    Stack(
+                      children: <Widget>[
+                        CurvedBorderedCard(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              // Between ${_ageSliderValue.toInt()} and 29
+                              Text(
+                                  'Between ${_ageSliderValue.start.toInt()} and ${_ageSliderValue.end.toInt()}'),
+                              EdgedRangeSlider(
+                                min: 18,
+                                max: 99,
+                                values: _ageSliderValue,
+                                onChanged: (values) => setState(() {
+                                  this._ageSliderValue = values;
+                                }),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+
                     SizedBox(height: 12),
                     title('Distance'),
                     CurvedBorderedCard(
