@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bumble_clone/constants.dart';
 import 'package:flutter_bumble_clone/screens/login_password_screen.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:country_code_picker/country_code_picker.dart';
+import 'package:country_code_picker/country_code.dart';
+import 'package:country_code_picker/country_codes.dart';
+import 'package:country_code_picker/selection_dialog.dart';
 
 class LoginMobileScreen extends StatefulWidget {
   @override
@@ -99,10 +103,24 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                       hintText: '1234567890',
                       fillColor: Colors.white70,
                       prefixIcon: SizedBox(
-                        child: Center(
+                        child: CountryCodePicker(
+                          onChanged: print,
+                          // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
+                          initialSelection: 'IT',
+                          favorite: ['+39','FR'],
+                          // optional. Shows only country name and flag
+                          showCountryOnly: false,
+                          // optional. Shows only country name and flag when popup is closed.
+                          showOnlyCountryWhenClosed: false,
+                          // optional. aligns the flag and the Text left
+                          alignLeft: false,
+                        ),
+                        /*child:
+                        Center(
                           child: Text('+63'),
                           widthFactor: 0,
-                        ),
+
+                        ),*/
                       ),
                     ),
                   ),

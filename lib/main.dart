@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bumble_clone/screens/landing_screen.dart';
+import 'package:flutter_bumble_clone/screens/main_screen.dart';
 
 void main() => runApp(MyApp());
 
