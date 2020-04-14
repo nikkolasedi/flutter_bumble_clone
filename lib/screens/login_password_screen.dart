@@ -170,20 +170,23 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
             textAlign: TextAlign.center,
           ),
           actions: <Widget>[
-            FlatButton(
+            PlatformDialogAction(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel'),
+              child: Text(
+                'Cancel',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
-            FlatButton(
+            PlatformDialogAction(
               onPressed: () {
-                print(widget.mobileNumber);
                 final String mobileNumber = widget.mobileNumber;
-                print(mobileNumber);
-                Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
                     builder: (context) => ForgotPasswordScreen(
-                          mobileNumber: mobileNumber,
-                        )));
+                      mobileNumber: mobileNumber,
+                    ),
+                  ),
+                );
               },
               child: Text('Confirm'),
             ),
