@@ -107,10 +107,10 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                         child: CountryCodePicker(
                           onChanged: print,
                           // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
-                          initialSelection: 'IT',
-                          favorite: ['+39','FR'],
+                          initialSelection: '+62',
+                          favorite: ['+62','+60','+65'],
                           // optional. Shows only country name and flag
-                          showCountryOnly: false,
+                          showCountryOnly: true,
                           // optional. Shows only country name and flag when popup is closed.
                           showOnlyCountryWhenClosed: false,
                           // optional. aligns the flag and the Text left
@@ -156,7 +156,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
   }
 
   _continueClicked() {
-    const String recognized = '9063517354';
+    const String recognized = '123456789';
 
     if (_mobileTextController.text == recognized) {
       FocusScope.of(context).unfocus();

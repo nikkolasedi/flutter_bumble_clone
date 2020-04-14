@@ -1,9 +1,12 @@
 import 'dart:async';
-
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bumble_clone/constants.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:flutter_bumble_clone/screens/main_screen.dart';
+import 'package:flutter_bumble_clone/providers/main_screen_view_provider.dart';
+import 'package:flutter_bumble_clone/screens/login_mobile_screen.dart';
 
 class VerifyNumberScreen extends StatefulWidget {
   final String mobileNumber;
@@ -53,9 +56,29 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
   }
 
   _verifyClicked() {
-    if (_currentText.length == 4) {}
-  }
+    if (_currentText.length == 4) {
+      _navigateMainScreen();
+      }
+    }
 
+
+  /*_navigateToLoginPasswordScreen() {
+  Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => LoginPasswordScreen(
+        mobileNumber: widget.mobileNumber,
+      )));
+  }*/
+  _navigateMainScreen() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => ChangeNotifierProvider<MainScreenViewProvider>(
+          child: MainScreen(),
+          create: (_) => MainScreenViewProvider(),
+        ),
+      ),
+          (route) => route.isFirst,
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
