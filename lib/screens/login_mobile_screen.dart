@@ -16,6 +16,8 @@ class LoginMobileScreen extends StatefulWidget {
 class _LoginMobileScreenState extends State<LoginMobileScreen> {
   TextEditingController _mobileTextController = TextEditingController();
   FocusNode _mobileFocusNode = FocusNode();
+  CountryCode countryCode = new CountryCode(dialCode: "+62",code: "ID");
+
 
   bool _isFieldValid = true;
 
@@ -86,9 +88,11 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                 Theme(
                   data: ThemeData(),
                   child: TextField(
-                    onChanged: (_) => this.setState(() {
+                    onChanged: (_) => {this.setState(() {
                       _isFieldValid = true;
                     }),
+                    _onCountryChange,
+                    },
                     autofocus: true,
                     keyboardType: TextInputType.number,
                     enableSuggestions: false,
@@ -105,7 +109,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
                       fillColor: Colors.white70,
                       prefixIcon: SizedBox(
                         child: CountryCodePicker(
-                          onChanged: print,
+                          onChanged: _onCountryChange,
                           // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
                           initialSelection: '+62',
                           favorite: ['+62','+60','+65'],
@@ -174,7 +178,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
           return PlatformAlertDialog(
             title: Text('Phone Number Confirmation'),
             content: Text(
-                "We'll send a verification code to the following number:\n+63${_mobileTextController.text}"),
+                "We'll send a verification code to the following number:\n${countryCode.toString() + _mobileTextController.text}"),
             actions: <Widget>[
               PlatformDialogAction(
                 onPressed: () => Navigator.of(context).pop(),
@@ -202,7 +206,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
   _navigateToLoginPasswordScreen() {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => LoginPasswordScreen(
-              mobileNumber: _mobileTextController.text,
+              mobileNumber: countryCode.toString() + _mobileTextController.text,
             )));
   }
 
@@ -210,7 +214,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
     bool shouldReset = await Navigator.of(context).push<bool>(MaterialPageRoute(
       fullscreenDialog: true,
       builder: (_) => VerifyNumberScreen(
-        mobileNumber: _mobileTextController.text,
+        mobileNumber: countryCode.toString() + _mobileTextController.text,
       ),
     ));
 
@@ -219,5 +223,10 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
         _mobileTextController.clear();
       });
     }
+  }
+
+  void _onCountryChange(CountryCode countryCode1) {
+    //TODO : manipulate the selected country code here
+    countryCode = countryCode1;
   }
 }

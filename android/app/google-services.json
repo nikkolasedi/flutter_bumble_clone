@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "801941981569",
+    "firebase_url": "https://bumble-clone-9eb53.firebaseio.com",
+    "project_id": "bumble-clone-9eb53",
+    "storage_bucket": "bumble-clone-9eb53.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:801941981569:android:289d225843998c3a4e0080",
+        "android_client_info": {
+          "package_name": "com.example.flutter_bumble_clone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "801941981569-suqipp82cbceb8bulms4jal5qiaokpuj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoXCqOtx44fKXlHbpRJ87cF9V5AwzaZv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "801941981569-suqipp82cbceb8bulms4jal5qiaokpuj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
