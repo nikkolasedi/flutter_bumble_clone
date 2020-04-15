@@ -7,6 +7,10 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:country_code_picker/country_code.dart';
 import 'package:country_code_picker/country_codes.dart';
 import 'package:country_code_picker/selection_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bumble_clone/screens/main_screen.dart';
+import 'package:flutter_bumble_clone/providers/main_screen_view_provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginMobileScreen extends StatefulWidget {
   @override
@@ -20,6 +24,9 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
 
 
   bool _isFieldValid = true;
+
+
+  String verificationId;
 
   @override
   void dispose() {
@@ -160,12 +167,13 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
   }
 
   _continueClicked() {
-    const String recognized = '123456789';
+    const String recognized = '1234567';
 
     if (_mobileTextController.text == recognized) {
       FocusScope.of(context).unfocus();
-      _navigateToLoginPasswordScreen();
-    } else if (_mobileTextController.text.length != recognized.length) {
+      //_navigateToLoginPasswordScreen();
+      _navigateToVerifyNumberScreen();
+    } else if (_mobileTextController.text.length < recognized.length) {
       setState(() {
         _mobileFocusNode.requestFocus();
         _isFieldValid = false;
@@ -189,6 +197,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
               ),
               PlatformDialogAction(
                 onPressed: () {
+                  verifyNumber();
                   Navigator.of(context).pop();
                   _navigateToVerifyNumberScreen();
                 },
@@ -215,6 +224,7 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
       fullscreenDialog: true,
       builder: (_) => VerifyNumberScreen(
         mobileNumber: countryCode.toString() + _mobileTextController.text,
+        verificationId: this.verificationId
       ),
     ));
 
@@ -229,4 +239,58 @@ class _LoginMobileScreenState extends State<LoginMobileScreen> {
     //TODO : manipulate the selected country code here
     countryCode = countryCode1;
   }
+
+  Future<void> verifyNumber() async{
+    final PhoneCodeAutoRetrievalTimeout autoRetrieve=(String verID){
+      this.verificationId=verID;
+      ///Dialog here
+      //smsCodeDialog(context);
+      _navigateToVerifyNumberScreen();
+    };
+
+    final PhoneVerificationCompleted verificationSuccess=(AuthCredential credential){
+      print("Verified");
+      /*Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context)=>
+          MyHomePage()
+      ));*/
+      _navigateToVerifyNumberScreen();
+
+    };
+
+    final PhoneCodeSent smsCodeSent=(String verID,[int forceCodeResend]){
+      this.verificationId=verID;
+      Navigator.pop(context);
+      /*Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context)=>
+          MyHomePage()
+      ));*/
+      _navigateToVerifyNumberScreen();
+    };
+
+    final PhoneVerificationFailed verificationFailed=(AuthException exception){
+      print('$exception.message');
+    };
+
+    await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: countryCode.toString() + _mobileTextController.text,
+        codeAutoRetrievalTimeout: autoRetrieve,
+        codeSent: smsCodeSent,
+        timeout: const Duration(seconds: 30),
+        verificationCompleted: verificationSuccess,
+        verificationFailed: verificationFailed
+
+    );
+  }
+  _navigateMainScreen() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => ChangeNotifierProvider<MainScreenViewProvider>(
+          child: MainScreen(),
+          create: (_) => MainScreenViewProvider(),
+        ),
+      ),
+          (route) => route.isFirst,
+    );
+  }
+
+
 }
